@@ -5,15 +5,16 @@
  */
 import express from "express";
 import { StatusCodes } from "http-status-codes";
-import {boardValidation} from '~/validations/boardValidation'
-import {boardController} from '~/controllers/boardController'
+import { boardValidation } from "~/validations/boardValidation";
+import { boardController } from "~/controllers/boardController";
 const Router = express.Router();
 
-Router.route("/:id")
+Router.route("/")
   .get((req, res) => {
-    res.status(StatusCodes.OK).json({message:'APIs V1 get board'})
-
+    res.status(StatusCodes.OK).json({ message: "APIs V1 get board" });
   })
-  .post(boardValidation.createNew,boardController.createNew);
+  .post(boardValidation.createNew, boardController.createNew);
+
+Router.route("/:id").get(boardController.getDetails).put(); //update board
 
 export const boardRoutes = Router;

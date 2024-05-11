@@ -12,15 +12,10 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 let trelloDatabaseInstance = null;
 
 //Khởi tạo 1 đối tượng MongoClient Instance để connect tới MongoDB
-const mongoClientInstance = new MongoClient(env.MONGODB_URI, {
-  //   serverApi: {
-  //     version: ServerApiVersion.v1,
-  //     strict: true,
-  //     deprecationErrors: true,
-  //   },
-});
+const mongoClientInstance = new MongoClient(env.MONGODB_URI);
 
 //Kết nối tới Database
+
 export const CONNECT_DB = async () => {
   //Gọi kết nối tới MongoDB ATlas với URI đã khai báo trong thân của mongoClientInstance
   await mongoClientInstance.connect();
