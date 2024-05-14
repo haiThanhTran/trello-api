@@ -8,6 +8,7 @@ import ApiError from "~/utils/ApiError";
 import { slugify } from "~/utils/formaters";
 import { boardModel } from "~/models/boardModel";
 import { StatusCodes } from "http-status-codes";
+import { cloneDeep } from "lodash";
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
   try {
@@ -21,7 +22,7 @@ const createNew = async (reqBody) => {
     console.log("createdBoard", createdBoard);
 
     //Lay ban ghi board sau khi goi
-    const getNewBoard = await boardModel.findOneById(createdBoard.insertedId)
+    const getNewBoard = await boardModel.findOneById(createdBoard.insertedId);
     // console.log(getNewBoard)
     //Trả kết quả về,trong Service luôn phải có return
     return getNewBoard;
@@ -33,18 +34,40 @@ const createNew = async (reqBody) => {
 const getDetail = async (boardId) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    console.log("boardId",boardId)
     const board = await boardModel.getDetail(boardId);
     if (!board) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found');
+      throw new ApiError(StatusCodes.NOT_FOUND, "Board not found");
     }
-    return board;
+    console.log("board", board);
+    const resBoard = cloneDeep(board);
+    //Đưa card về đúng column của nó
+    resBoard.columns.forEach((column) => {
+      column.cards = resBoard.cards.filter((card) =>
+        card.columnId.equals(column._id)
+      );
+    });
+    delete resBoard.cards;
+    return resBoard;
   } catch (error) {
     throw error;
   }
 };
 
+const update = async (boardId, reqBody) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const updateData = {
+      ...reqBody,
+      updatedAt: Date.now(),
+    };
+    const updatedBoard = await boardModel.update(boardId,updateData);
+    return updatedBoard;
+  } catch (error) {
+    throw error;
+  }
+};
 export const boardService = {
   createNew,
-  getDetail
+  getDetail,
+  update,
 };
