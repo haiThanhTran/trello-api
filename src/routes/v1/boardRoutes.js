@@ -15,6 +15,8 @@ Router.route("/")
   })
   .post(boardValidation.createNew, boardController.createNew);
 
-Router.route("/:id").get(boardController.getDetails).put(); //update board
+Router.route('/:id')
+  .get(boardController.getDetails)
+  .put(boardValidation.update,boardController.update); //update board
 
 export const boardRoutes = Router;

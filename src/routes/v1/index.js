@@ -6,16 +6,21 @@
 
 import express from "express";
 import { StatusCodes } from "http-status-codes";
-import {boardRoutes} from '~/routes/v1/boardRoutes';
+import { boardRoutes } from "~/routes/v1/boardRoutes";
+import { columnRoutes } from "~/routes/v1/columnRoutes";
+import { cardRoutes } from "~/routes/v1/cardRoutes";
 
 const Router = express.Router();
 
 //Check API V1 status
-Router.get('/status', (req, res) => {
+Router.get("/status", (req, res) => {
   res.status(StatusCodes.OK).json({ message: "APIs V1 are ready to use" });
 });
 
+Router.use("/boards", boardRoutes);
 
-Router.use('/boards',boardRoutes)
+Router.use("/columns", columnRoutes);
+
+Router.use("/cards", cardRoutes);
 
 export const APIs_V1 = Router;
